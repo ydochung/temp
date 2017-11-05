@@ -31,11 +31,18 @@ int main() {
 	const string greeting = "Hello, " + name + "!";
 
 	// the number of blanks surrounding the greeting
-	const int pad = 5;
+	int vertical_pad = 1;
+	int horizontal_pad = 1;
+
+	// Exercises 2-3 ask the user to supply the amount of spacing
+	cout << "Enter the amount of vertical spacing: ";
+	cin >> vertical_pad;
+	cout << "Enter the amount of horizontal spacing: ";
+	cin >> horizontal_pad;
 
 	// the number of rows and columns to write
-	const int rows = pad*2 +3;
-	const string::size_type cols = greeting.size() + pad *2 + 2;
+	const int rows = vertical_pad*2 + 3;
+	const string::size_type cols = greeting.size() + horizontal_pad*2+2;
 
 	// write a blank line to separate the output from the input
 	cout << endl;
@@ -48,7 +55,7 @@ int main() {
 		//invariant: we have written c characters so far in the current row
 		while (c != cols){
 			// is it time to write the greeting?
-			if (r == pad + 1 && c == pad + 1){
+			if (r == vertical_pad + 1 && c == horizontal_pad + 1){
 				cout << greeting;
 				c += greeting.size();
 			}
