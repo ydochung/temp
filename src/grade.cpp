@@ -28,3 +28,30 @@ double grade(const Student_info& s){
 	return grade(s.midterm, s.final, s.homework);
 }
 
+bool fgrade(const Student_info& s){
+	return grade(s) < 60;
+}
+
+bool did_all_hw(const Student_info& s){
+	return ((find(s.homework.begin(), s.homework.end(), 0)) == s.homework.end());
+}
+
+double grade_aux(const Student_info& s){
+	try{
+		return grade(s);
+	}
+	catch (domain_error){
+		return grade(s.midterm, s.final, 0);
+	}
+}
+
+double median_analysis(const vector<Student_info>& students){
+	vector<double> grades;
+	transform(students.begin(), students.end(), back_inserter(grades), grade_aux);
+	return median(grades);
+}
+
+void write_analysis(std::ostream& out, const std::string& name, double analysis(const vector<Student_info>&),
+				    const vector<Student_info>& did, const vector<Student_info>& didnt){
+	out << name << ": median(did) = " << analysis(did) << ", median(didn't) = " << analysis(didnt) << std::endl;
+}
