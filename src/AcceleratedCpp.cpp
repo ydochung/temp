@@ -13,6 +13,9 @@
 #include <string>
 #include <vector>
 
+#include "grade.h"
+#include "Student_info.h"
+
 using namespace std;
 
 
@@ -81,48 +84,39 @@ void framing(){
 }
 
 int main() {
-	// ask for and read the student's name
-	cout << "Please enter your first name: ";
-	string name;
-	cin >> name;
-	cout << "Hello, " << name << "!" << endl;
 
-	// ask for and read the midterm and final grades
-	cout << "Please enter your midterm and final exam grades: ";
-	double midterm, final;
-	cin >> midterm >> final;
+	vector<Student_info> students;
+	Student_info record;
+	string::size_type maxlen = 0;
 
-	// ask for and read the homework grades
-	cout << "Enter all your homework grades, "
-			"followed by end-of-file: ";
-
-	vector<double> homework;
-	double x;
-	//invariant: homework contains all the homework grades read so far
-	while (cin >> x) homework.push_back(x);
-
-	// check that the student entered some homework grades
-	typedef vector<double>::size_type vec_sz;
-	vec_sz size = homework.size();
-	if (size == 0){
-		cout << endl << "You must enter your grades. "
-						"please try again. " << endl;
-		return 1;
+	// read and store all the students' data
+	// Invariant: students contains all the student records read so far
+	// 			  maxlen contains the length of the longest name in students
+	while (read(cin, record)){
+		// find length of longest name
+		maxlen = max(maxlen, record.name.size());
+		students.push_back(record);
 	}
 
-	// sort the grades
-	sort(homework.begin(), homework.end());
+	// alphabetize the student records
+	sort(students.begin(), students.end(), compare);
 
-	// compute the median homework grade
-	vec_sz mid = size/2;
-	double median;
-	median = size%2 == 0? (homework[mid] + homework[mid-1]) / 2 : homework[mid];
+	// write the names and grades
+	for (vector<Student_info>::size_type i = 0; i != students.size(); ++i){
+		// write the name, padded on the right to maxlen + 1 character
+		cout << students[i].name << string(maxlen+1 - students[i].name.size(), ' ');
 
-	// compute and write the final grade
-	streamsize prec = cout.precision();
-	cout << "Your final grade is " << setprecision(3)
-		 << 0.2 * midterm + 0.4 * final + 0.4 * median
-		 << setprecision(prec) << endl;
+		// compute and write the grade
+		try{
+			double final_grade = grade(students[i]);
+			streamsize prec = cout.precision();
+			cout << setprecision(3) << final_grade << setprecision(prec);
+		}
+		catch (domain_error e){
+			cout << e.what();
+		}
+		cout << endl;
+	}
 
 	return 0;
 }
