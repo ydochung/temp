@@ -91,9 +91,10 @@ bool not_space(char c){
 	return !isspace(c);
 }
 
-vector<string> split(const string& str){
+template <class Out>
+void split(const string& str, Out os){
 	typedef string::const_iterator iter;
-	vector<string> ret;
+
 	iter i = str.begin();
 	while(i != str.end()){
 		// ignore leading blanks
@@ -104,14 +105,12 @@ vector<string> split(const string& str){
 
 		// copy the character in [i, j)
 		if (i != str.end()){
-			ret.push_back(string(i,j));
+			*os++ = string(i,j);
 		}
 		i = j;
 	}
-	return ret;
 }
 int main() {
-
 	vector<Student_info> students;
 	Student_info record;
 	string::size_type maxlen = 0;
